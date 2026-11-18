@@ -728,29 +728,15 @@ function drawBuilding1(b){
 }
 function drawPeak(i,j){
   const p=P(i+.5,j+.5),lv=mount[idx(i,j)];
-  if(lv<=0)return;
-  if(lv===1){
-    const h=6+hash(i,j,23)*4;
-    ell(p[0]+2,p[1]+1,22,10,'rgba(60,80,40,.14)');
-    ell(p[0],p[1]-h*.4,20,9+h*.3,'rgba(168,192,116,.92)');
-    ell(p[0]-3,p[1]-h*.7,12,5+h*.2,'rgba(196,218,142,.85)');
-    return;
-  }
-  if(lv===2){
-    const h=14+hash(i,j,23)*8;
-    ell(p[0]+3,p[1]+2,30,13,'rgba(60,80,40,.18)');
-    ell(p[0],p[1]-h*.4,27,11+h*.4,'rgba(164,188,112,.94)');
-    ell(p[0]-6,p[1]-h*.9,16,6+h*.3,'rgba(202,220,148,.88)');
-    return;
-  }
-  const hBase=24+lv*14;
-  const h=hBase+hash(i,j,21)*26,w=24+lv*4+hash(i,j,22)*8;
-  const ax=p[0]+(hash(i,j,24)-.5)*10,A=[ax,p[1]-h],Lp=[p[0]-w,p[1]],Bp=[p[0],p[1]+w*.48],Rp=[p[0]+w,p[1]];
+  if(lv<2)return;
+  const hBase=lv===2?24:lv===3?38:lv===4?56:74;
+  const h=hBase+hash(i,j,21)*26,w=22+lv*4+hash(i,j,22)*7;
+  const ax=p[0]+(hash(i,j,24)-.5)*8,A=[ax,p[1]-h],Lp=[p[0]-w,p[1]],Bp=[p[0],p[1]+w*.48],Rp=[p[0]+w,p[1]];
   const lr=(u,v,t)=>[u[0]+(v[0]-u[0])*t,u[1]+(v[1]-u[1])*t];
-  ell(p[0]+6,p[1]+4,w*1.05,w*.5,'rgba(50,60,44,.24)');
+  ell(p[0]+5,p[1]+3,w*1.05,w*.48,'rgba(50,60,44,.2)');
   poly([Lp,Bp,A],'rgb(156,150,144)');poly([Bp,Rp,A],'rgb(114,110,110)');
   poly([A,lr(A,Bp,.55),lr(A,Lp,.55)],'rgba(120,114,110,.5)');
-  if(h>44||lv>=3){
+  if(h>40||lv>=3){
     const sc=lv>=5?.42:lv===4?.36:.3;
     poly([A,lr(A,Lp,sc),lr(A,Bp,sc*.9)],'#f4f6f8');
     poly([A,lr(A,Bp,sc*.9),lr(A,Rp,sc)],'#d3dae3');
@@ -2735,7 +2721,7 @@ function draw(){
   if(tool==='move'&&moving&&bld[idx(moving.i,moving.j)]===moving)poly([P(moving.i,moving.j),P(moving.i+(moving.fw||1),moving.j),P(moving.i+(moving.fw||1),moving.j+(moving.fw||1)),P(moving.i,moving.j+(moving.fw||1))],'rgba(255,214,90,.6)','rgba(120,90,10,.8)');
   for(let j=0;j<N;j++)for(let i=0;i<N;i++){const k=idx(i,j);if(!vis(i,j,200,70))continue;
     if(tree[k])ent.push([i+j+1,0,i,j]);
-    if(mount[k]>=1)ent.push([i+j+1.002,7,i,j]);
+    if(mount[k]>=2)ent.push([i+j+1.002,7,i,j]);
     if(bld[k])ent.push([i+j+(bld[k].fw||1)+.01,1,bld[k]]);
     if(road[k]&&(i+j)%3===0){const lp=lampOf(i,j);if(lp)ent.push([lp[0]+lp[1]+.02,14,lp])}
     if(road[k]&&rail[k])ent.push([i+j+1.2,4,i,j]);
